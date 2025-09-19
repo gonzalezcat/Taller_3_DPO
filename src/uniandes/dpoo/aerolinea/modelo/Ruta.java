@@ -1,35 +1,19 @@
 package uniandes.dpoo.aerolinea.modelo;
 
+import uniandes.dpoo.aerolinea.modelo.cliente.Cliente;
+
 /**
  * Esta clase tiene la información de una ruta entre dos aeropuertos que cubre una aerolínea.
  */
 public class Ruta
 {
-    // TODO completar
-	private String codigoRuta;
-
-	
+    private String codigoRuta;
     private Aeropuerto origen;
-
-    
     private Aeropuerto destino;
-
-    
     private String horaSalida;
-
-
     private String horaLlegada;
 
-    /**
-     * Crea una ruta con la información mínima.
-     *
-     * @param origen Aeropuerto de origen
-     * @param destino Aeropuerto de destino
-     * @param horaSalida Hora de salida (string)
-     * @param horaLlegada Hora de llegada (string)
-     * @param codigoRuta Código de la ruta
-     */
-    public Ruta( Aeropuerto origen, Aeropuerto destino, String horaSalida, String horaLlegada, String codigoRuta )
+    public Ruta(Aeropuerto origen, Aeropuerto destino, String horaSalida, String horaLlegada, String codigoRuta)
     {
         this.origen = origen;
         this.destino = destino;
@@ -38,78 +22,113 @@ public class Ruta
         this.codigoRuta = codigoRuta;
     }
 
-    /* Getters */
-    public String getCodigoRuta( )
+    // ---------------- Getters ----------------
+
+    public String getCodigoRuta()
     {
         return codigoRuta;
     }
 
-    public Aeropuerto getOrigen( )
+    public Aeropuerto getOrigen()
     {
         return origen;
     }
 
-    public Aeropuerto getDestino( )
+    public Aeropuerto getDestino()
     {
         return destino;
     }
 
-    public String getHoraSalida( )
+    public String getHoraSalida()
     {
         return horaSalida;
     }
 
-    public String getHoraLlegada( )
+    public String getHoraLlegada()
     {
         return horaLlegada;
     }
-    
-    public static int getMinutos( String horaCompleta )
+
+    // ---------------- Utilidades ----------------
+
+    public static int getMinutos(String horaCompleta)
     {
-        if( horaCompleta == null || horaCompleta.trim( ).length( ) == 0 ) return 0;
-        String s = horaCompleta.trim( );
-        if( s.length( ) <= 2 ) return Integer.parseInt( s ); // improbable, pero defensivo
-        String minutosStr = s.substring( s.length( ) - 2 );
-        return Integer.parseInt( minutosStr );
+        if (horaCompleta == null || horaCompleta.trim().isEmpty()) return 0;
+        String s = horaCompleta.trim();
+        if (s.length() <= 2) return Integer.parseInt(s);
+        String minutosStr = s.substring(s.length() - 2);
+        return Integer.parseInt(minutosStr);
     }
+
+    public static int getHoras(String horaCompleta)
+    {
+        if (horaCompleta == null || horaCompleta.trim().isEmpty()) return 0;
+        String s = horaCompleta.trim();
+        return Integer.parseInt(s) / 100;
+    }
+
+    // ---------------- Tarifa ----------------
 
     /**
-     * Dada una cadena con una hora y minutos, retorna las horas.
-     *
-     * Por ejemplo, para la cadena '715' retorna 7.
-     * @param horaCompleta Una cadena con una hora, donde los minutos siempre ocupan los dos últimos caracteres
-     * @return Una cantidad de horas entre 0 y 23
+     * Calcula la tarifa para un cliente en un vuelo en esta ruta.
+     * Aquí puedes ajustar la lógica según las reglas del PDF.
      */
-    public static int getHoras( String horaCompleta )
+    public int calcularTarifa(Cliente cliente, Vuelo vuelo)
     {
-        if( horaCompleta == null || horaCompleta.trim( ).length( ) == 0 ) return 0;
-        String s = horaCompleta.trim( );
-        return Integer.parseInt( s ) / 100;
+        int base = 500; // valor base, adáptalo si el PDF da otra fórmula
+
+        // Temporada alta = junio(6)-agosto(8), diciembre(12)
+        int mes = obtenerMesDeFecha(vuelo.getFecha());
+        boolean temporadaAlta = (mes >= 6 && mes <= 8) || (mes == 12);
+
+        if (temporadaAlta)
+            base *= 2; // temporada alta = tarifa doble
+
+        // Ejemplo de ajuste para corporativos (puedes cambiar según reglas reales del PDF)
+        if ("CORPORATIVO".equals(cliente.getTipoCliente()))
+            base *= 0.9; // descuento del 10%
+
+        return base;
+    }
+
+    private int obtenerMesDeFecha(String fecha)
+    {
+        // Asumimos formato yyyy-mm-dd
+        try
+        {
+            String[] partes = fecha.split("-");
+            return Integer.parseInt(partes[1]);
+        }
+        catch (Exception e)
+        {
+            return 1; // fallback = enero
+        }
+    }
+
+    // ---------------- Overrides ----------------
+
+    @Override
+    public String toString()
+    {
+        return String.format("Ruta[%s: %s -> %s, sale %s llega %s]",
+                codigoRuta,
+                origen == null ? "??" : origen.getCodigo(),
+                destino == null ? "??" : destino.getCodigo(),
+                horaSalida, horaLlegada);
     }
 
     @Override
-    public String toString( )
+    public boolean equals(Object o)
     {
-        return String.format( "Ruta[%s: %s -> %s, sale %s llega %s]", codigoRuta,
-            origen == null ? "??" : origen.getCodigo( ),
-            destino == null ? "??" : destino.getCodigo( ),
-            horaSalida, horaLlegada );
+        if (this == o) return true;
+        if (o == null || !(o instanceof Ruta)) return false;
+        Ruta r = (Ruta) o;
+        return this.codigoRuta != null && this.codigoRuta.equals(r.getCodigoRuta());
     }
 
     @Override
-    public boolean equals( Object o )
+    public int hashCode()
     {
-        if( this == o ) return true;
-        if( o == null || !( o instanceof Ruta ) ) return false;
-        Ruta r = ( Ruta ) o;
-        return this.codigoRuta != null && this.codigoRuta.equals( r.getCodigoRuta( ) );
+        return (codigoRuta == null) ? 0 : codigoRuta.hashCode();
     }
-
-    @Override
-    public int hashCode( )
-    {
-        return ( codigoRuta == null ) ? 0 : codigoRuta.hashCode( );
-    }
-
-    
 }

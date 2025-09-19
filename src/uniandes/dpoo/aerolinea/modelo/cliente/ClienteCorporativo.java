@@ -7,8 +7,6 @@ import org.json.JSONObject;
  */
 public class ClienteCorporativo extends Cliente
 {
-    public static final String CORPORATIVO = "CORPORATIVO";
-
     private String nombreEmpresa;
     private String tamanoEmpresa;
 
@@ -29,7 +27,7 @@ public class ClienteCorporativo extends Cliente
     @Override
     public String getTipoCliente()
     {
-        return CORPORATIVO;
+        return Cliente.CORPORATIVO; // usa la constante del abstracto
     }
 
     public String getNombreEmpresa()
@@ -73,7 +71,7 @@ public class ClienteCorporativo extends Cliente
         jobject.put("nombre", getNombre());
         jobject.put("nombreEmpresa", this.nombreEmpresa);
         jobject.put("tamanoEmpresa", this.tamanoEmpresa);
-        jobject.put("tipo", CORPORATIVO);
+        jobject.put("tipo", Cliente.CORPORATIVO);
         return jobject;
     }
 }

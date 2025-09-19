@@ -11,12 +11,16 @@ import uniandes.dpoo.aerolinea.tiquetes.Tiquete;
  */
 public abstract class Cliente
 {
+    // ---------------- Constantes ----------------
+    public static final String NATURAL = "Natural";
+    public static final String CORPORATIVO = "Corporativo";
+
+    // ---------------- Atributos -----------------
     private String identificador;
     private String nombre;
-
-    // Lista de tiquetes asociados al cliente
     private List<Tiquete> tiquetes;
 
+    // ---------------- Constructores -------------
     public Cliente()
     {
         this.identificador = "";
@@ -31,10 +35,10 @@ public abstract class Cliente
         this.tiquetes = new ArrayList<>();
     }
 
-    // ------------------ Métodos abstractos ------------------
+    // ---------------- Métodos abstractos --------
     public abstract String getTipoCliente();
 
-    // ------------------ Getters & Setters -------------------
+    // ---------------- Getters & Setters ---------
     public String getIdentificador()
     {
         return identificador;
@@ -55,7 +59,7 @@ public abstract class Cliente
         this.nombre = nombre;
     }
 
-    // ------------------ Manejo de tiquetes ------------------
+    // ---------------- Manejo de tiquetes --------
     public void agregarTiquete(Tiquete t)
     {
         if (t != null)
@@ -76,5 +80,12 @@ public abstract class Cliente
                 libres.add(t);
         }
         return libres;
+    }
+
+    // ---------------- Utilidad ------------------
+    @Override
+    public String toString()
+    {
+        return String.format("Cliente[%s: %s]", identificador, nombre);
     }
 }

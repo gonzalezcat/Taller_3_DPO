@@ -1,42 +1,79 @@
 package uniandes.dpoo.aerolinea.modelo.cliente;
+
 import org.json.JSONObject;
 
-public class ClienteNatural extends Cliente {
-	public static final String NATURAL = "NATURAL";
+/**
+ * Esta clase se usa para representar a los clientes de la aerolínea que son empresas.
+ */
+public class ClienteCorporativo extends Cliente
+{
+    public static final String CORPORATIVO = "CORPORATIVO";
 
-	public ClienteNatural()
-	{
-		super();
-	}
+    private String nombreEmpresa;
+    private String tamanoEmpresa;
 
-	public ClienteNatural(String identificador, String nombre)
-	{
-		super(identificador, nombre);
-	}
+    public ClienteCorporativo()
+    {
+        super();
+        this.nombreEmpresa = "";
+        this.tamanoEmpresa = "";
+    }
 
-	@Override
-	public String getTipoCliente()
-	{
-		return NATURAL;
-	}
+    public ClienteCorporativo(String identificador, String nombre, String nombreEmpresa, String tamanoEmpresa)
+    {
+        super(identificador, nombre);
+        this.nombreEmpresa = nombreEmpresa;
+        this.tamanoEmpresa = tamanoEmpresa;
+    }
 
-	public static ClienteNatural cargarDesdeJSON(JSONObject json)
-	{
-		ClienteNatural c = new ClienteNatural();
-		if (json.has("identificador"))
-			c.setIdentificador(json.getString("identificador"));
-		if (json.has("nombre"))
-			c.setNombre(json.getString("nombre"));
-		return c;
-	}
+    @Override
+    public String getTipoCliente()
+    {
+        return CORPORATIVO;
+    }
 
-	public JSONObject salvarEnJSON()
-	{
-		JSONObject j = new JSONObject();
-		j.put("identificador", getIdentificador());
-		j.put("nombre", getNombre());
-		j.put("tipo", NATURAL);
-		return j;
-	}
+    public String getNombreEmpresa()
+    {
+        return nombreEmpresa;
+    }
 
+    public void setNombreEmpresa(String nombreEmpresa)
+    {
+        this.nombreEmpresa = nombreEmpresa;
+    }
+
+    public String getTamanoEmpresa()
+    {
+        return tamanoEmpresa;
+    }
+
+    public void setTamanoEmpresa(String tamanoEmpresa)
+    {
+        this.tamanoEmpresa = tamanoEmpresa;
+    }
+
+    public static ClienteCorporativo cargarDesdeJSON(JSONObject json)
+    {
+        ClienteCorporativo c = new ClienteCorporativo();
+        if (json.has("identificador"))
+            c.setIdentificador(json.getString("identificador"));
+        if (json.has("nombre"))
+            c.setNombre(json.getString("nombre"));
+        if (json.has("nombreEmpresa"))
+            c.setNombreEmpresa(json.getString("nombreEmpresa"));
+        if (json.has("tamanoEmpresa"))
+            c.setTamanoEmpresa(json.getString("tamanoEmpresa"));
+        return c;
+    }
+
+    public JSONObject salvarEnJSON()
+    {
+        JSONObject jobject = new JSONObject();
+        jobject.put("identificador", getIdentificador());
+        jobject.put("nombre", getNombre());
+        jobject.put("nombreEmpresa", this.nombreEmpresa);
+        jobject.put("tamanoEmpresa", this.tamanoEmpresa);
+        jobject.put("tipo", CORPORATIVO);
+        return jobject;
+    }
 }
