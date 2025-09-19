@@ -120,24 +120,13 @@ public class Aerolinea
 
     // -------------------- Persistencia --------------------
 
-    public void cargarAerolinea( String archivo, String tipoArchivo )
+    public void cargarAerolinea(String archivo, String tipoArchivo)
             throws TipoInvalidoException, IOException, InformacionInconsistenteException
     {
-        IPersistenciaAerolinea persist = CentralPersistencia.getPersistenciaAerolinea( tipoArchivo );
-        Aerolinea cargada = persist.cargarAerolinea( archivo );
-        this.aviones = new LinkedList<>( cargada.getAviones() );
-        this.rutas   = new HashMap<>();
-        for( Ruta r : cargada.getRutas() )
-        {
-            this.rutas.put( r.getCodigoRuta(), r );
-        }
-        this.vuelos   = new LinkedList<>( cargada.getVuelos() );
-        this.clientes = new HashMap<>();
-        for( Cliente c : cargada.getClientes() )
-        {
-            this.clientes.put( c.getIdentificador(), c );
-        }
+        IPersistenciaAerolinea persist = CentralPersistencia.getPersistenciaAerolinea(tipoArchivo);
+        persist.cargarAerolinea(archivo, this);  // pasa la instancia actual
     }
+
 
     public void salvarAerolinea( String archivo, String tipoArchivo ) throws TipoInvalidoException, IOException
     {
@@ -189,7 +178,7 @@ public class Aerolinea
             }
         }
 
-        Vuelo nuevo = new Vuelo( ruta, fecha, avionSeleccionado );
+        Vuelo nuevo = new Vuelo(fecha, ruta, avionSeleccionado );
         vuelos.add( nuevo );
     }
 

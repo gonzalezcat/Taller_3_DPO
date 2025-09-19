@@ -39,8 +39,8 @@ public class PersistenciaTiquetesJson implements IPersistenciaTiquetes
         String jsonCompleto = new String(Files.readAllBytes(new File(archivo).toPath()));
         JSONObject raiz = new JSONObject(jsonCompleto);
 
-        cargarClientesDesdeJSON(aerolinea, raiz.getJSONArray("clientes"));
-        cargarTiquetesDesdeJSON(aerolinea, raiz.getJSONArray("tiquetes"));
+        cargarClientes(aerolinea, raiz.getJSONArray("clientes"));
+        cargarTiquetes(aerolinea, raiz.getJSONArray("tiquetes"));
     }
 
     @Override
@@ -48,8 +48,8 @@ public class PersistenciaTiquetesJson implements IPersistenciaTiquetes
     {
         JSONObject jobject = new JSONObject();
 
-        salvarClientesEnJSON(aerolinea, jobject);
-        salvarTiquetesEnJSON(aerolinea, jobject);
+        salvarClientes(aerolinea, jobject);
+        salvarTiquetes(aerolinea, jobject);
 
         try (PrintWriter pw = new PrintWriter(archivo))
         {
@@ -57,9 +57,7 @@ public class PersistenciaTiquetesJson implements IPersistenciaTiquetes
         }
     }
 
-    // ------------------- MÉTODOS PRIVADOS ---------------------
-
-    private void cargarClientesDesdeJSON(Aerolinea aerolinea, JSONArray jClientes) throws ClienteRepetidoException
+    private void cargarClientes(Aerolinea aerolinea, JSONArray jClientes) throws ClienteRepetidoException
     {
         for (int i = 0; i < jClientes.length(); i++)
         {
@@ -67,15 +65,17 @@ public class PersistenciaTiquetesJson implements IPersistenciaTiquetes
             String tipoCliente = cliente.getString(TIPO);
             Cliente nuevoCliente;
 
-            if (ClienteNatural.NATURAL.equals(tipoCliente))
+            if (Cliente.NATURAL.equals(tipoCliente))
             {
-                String identificador = cliente.getString(IDENTIFICADOR);
-                String nombre = cliente.getString(NOMBRE);
-                nuevoCliente = new ClienteNatural(identificador, nombre);
+                nuevoCliente = ClienteNatural.cargarDesdeJSON(cliente);
+            }
+            else if (Cliente.CORPORATIVO.equals(tipoCliente))
+            {
+                nuevoCliente = ClienteCorporativo.cargarDesdeJSON(cliente);
             }
             else
             {
-                nuevoCliente = ClienteCorporativo.cargarDesdeJSON(cliente);
+                throw new IllegalArgumentException("Tipo de cliente desconocido: " + tipoCliente);
             }
 
             if (!aerolinea.existeCliente(nuevoCliente.getIdentificador()))
@@ -85,29 +85,24 @@ public class PersistenciaTiquetesJson implements IPersistenciaTiquetes
         }
     }
 
-    private void salvarClientesEnJSON(Aerolinea aerolinea, JSONObject jobject)
+    private void salvarClientes(Aerolinea aerolinea, JSONObject jobject)
     {
         JSONArray jClientes = new JSONArray();
         for (Cliente cliente : aerolinea.getClientes())
         {
-            if (ClienteNatural.NATURAL.equals(cliente.getTipoCliente()))
+            if (Cliente.NATURAL.equals(cliente.getTipoCliente()))
             {
-                JSONObject jCliente = new JSONObject();
-                jCliente.put(IDENTIFICADOR, cliente.getIdentificador());
-                jCliente.put(NOMBRE, cliente.getNombre());
-                jCliente.put(TIPO, ClienteNatural.NATURAL);
-                jClientes.put(jCliente);
+                jClientes.put(((ClienteNatural) cliente).salvarEnJSON());
             }
-            else
+            else if (Cliente.CORPORATIVO.equals(cliente.getTipoCliente()))
             {
-                ClienteCorporativo cc = (ClienteCorporativo) cliente;
-                jClientes.put(cc.salvarEnJSON());
+                jClientes.put(((ClienteCorporativo) cliente).salvarEnJSON());
             }
         }
         jobject.put("clientes", jClientes);
     }
 
-    private void cargarTiquetesDesdeJSON(Aerolinea aerolinea, JSONArray jTiquetes) throws InformacionInconsistenteTiqueteException
+    private void cargarTiquetes(Aerolinea aerolinea, JSONArray jTiquetes) throws InformacionInconsistenteTiqueteException
     {
         for (int i = 0; i < jTiquetes.length(); i++)
         {
@@ -142,7 +137,7 @@ public class PersistenciaTiquetesJson implements IPersistenciaTiquetes
         }
     }
 
-    private void salvarTiquetesEnJSON(Aerolinea aerolinea, JSONObject jobject)
+    private void salvarTiquetes(Aerolinea aerolinea, JSONObject jobject)
     {
         JSONArray jTiquetes = new JSONArray();
         for (Tiquete tiquete : aerolinea.getTiquetes())
