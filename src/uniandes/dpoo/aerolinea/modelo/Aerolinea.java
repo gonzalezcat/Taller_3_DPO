@@ -35,7 +35,7 @@ public class Aerolinea
         clientes = new HashMap<>();
     }
 
-    // -------------------- Métodos básicos --------------------
+    //methods1
 
     public void agregarRuta( Ruta ruta )
     {
@@ -103,7 +103,6 @@ public class Aerolinea
     }
 
     /**
-     * Retorna todos los tiquetes de la aerolínea, recolectados vuelo por vuelo.
      */
     public Collection<Tiquete> getTiquetes( )
     {
@@ -118,7 +117,7 @@ public class Aerolinea
         return resultado;
     }
 
-    // -------------------- Persistencia --------------------
+    //ppp
 
     public void cargarAerolinea(String archivo, String tipoArchivo)
             throws TipoInvalidoException, IOException, InformacionInconsistenteException
@@ -147,7 +146,7 @@ public class Aerolinea
         cargador.salvarTiquetes( archivo, this );
     }
 
-    // -------------------- Funcionalidades --------------------
+    // func
 
     public void programarVuelo( String fecha, String codigoRuta, String nombreAvion ) throws Exception
     {

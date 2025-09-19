@@ -28,7 +28,7 @@ public class Vuelo
         this.realizado = false;
     }
 
-    // ---------------- Getters ----------------
+    // getters
 
     public String getFecha()
     {
@@ -60,10 +60,10 @@ public class Vuelo
         return tiquetes;
     }
 
-    // ---------------- Funcionalidad ----------------
+    //
 
     /**
-     * @return capacidad total del avión
+     * @return capacidad total 
      */
     public int getCapacidadTotal()
     {
@@ -71,7 +71,7 @@ public class Vuelo
     }
 
     /**
-     * @return capacidad disponible del avión en este vuelo
+     * @return capacidad disponible 
      */
     public int getCapacidadDisponible()
     {
@@ -79,7 +79,7 @@ public class Vuelo
     }
 
     /**
-     * Vende un tiquete a un cliente y lo asocia al vuelo.
+     * Vende un tiquete a un cliente y lo asocia al vuelo
      * @param cliente Cliente comprador
      * @return Tiquete creado
      */

@@ -22,7 +22,7 @@ public class Ruta
         this.codigoRuta = codigoRuta;
     }
 
-    // ---------------- Getters ----------------
+    //getter
 
     public String getCodigoRuta()
     {
@@ -67,15 +67,13 @@ public class Ruta
         return Integer.parseInt(s) / 100;
     }
 
-    // ---------------- Tarifa ----------------
-
+    //tariff
     /**
-     * Calcula la tarifa para un cliente en un vuelo en esta ruta.
-     * Aquí puedes ajustar la lógica según las reglas del PDF.
+     * calcula la tarifa
      */
     public int calcularTarifa(Cliente cliente, Vuelo vuelo)
     {
-        int base = 500; // valor base, adáptalo si el PDF da otra fórmula
+        int base = 500; // base 
 
         // Temporada alta = junio(6)-agosto(8), diciembre(12)
         int mes = obtenerMesDeFecha(vuelo.getFecha());
@@ -84,7 +82,7 @@ public class Ruta
         if (temporadaAlta)
             base *= 2; // temporada alta = tarifa doble
 
-        // Ejemplo de ajuste para corporativos (puedes cambiar según reglas reales del PDF)
+        // ajustico
         if ("CORPORATIVO".equals(cliente.getTipoCliente()))
             base *= 0.9; // descuento del 10%
 
@@ -93,7 +91,7 @@ public class Ruta
 
     private int obtenerMesDeFecha(String fecha)
     {
-        // Asumimos formato yyyy-mm-dd
+        // yyyy-mm-dd
         try
         {
             String[] partes = fecha.split("-");
@@ -101,11 +99,11 @@ public class Ruta
         }
         catch (Exception e)
         {
-            return 1; // fallback = enero
+            return 1; //enero
         }
     }
 
-    // ---------------- Overrides ----------------
+    // ovrddd
 
     @Override
     public String toString()

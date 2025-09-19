@@ -27,7 +27,7 @@ public class ClienteCorporativo extends Cliente
     @Override
     public String getTipoCliente()
     {
-        return Cliente.CORPORATIVO; // usa la constante del abstracto
+        return Cliente.CORPORATIVO; //absss
     }
 
     public String getNombreEmpresa()

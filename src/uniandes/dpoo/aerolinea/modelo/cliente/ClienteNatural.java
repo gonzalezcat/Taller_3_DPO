@@ -17,7 +17,7 @@ public class ClienteNatural extends Cliente
     @Override
     public String getTipoCliente()
     {
-        return Cliente.NATURAL; // usa la constante de la clase abstracta
+        return Cliente.NATURAL; //abs
     }
 
     public static ClienteNatural cargarDesdeJSON(JSONObject json)
